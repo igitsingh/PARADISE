@@ -75,12 +75,7 @@ export function OurStory() {
   return (
     <div className="magical-story-container" ref={container}>
       <Link to="/" className="paradise-logo logo-link">
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {'PARADISE'.split('').map((char, index) => <span key={index}>{char}</span>)}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {'ORGANICS'.split('').map((char, index) => <span key={index}>{char}</span>)}
-        </div>
+        PARADISE ORGANICS
       </Link>
       
       <div className="dust-layer"></div>

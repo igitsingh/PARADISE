@@ -11,10 +11,10 @@ export function BrandOverlay() {
     return () => unsubscribe();
   }, []);
 
-  // Appears smoothly when the rain scene starts (p = 0.1)
+  // Appears just after the camera has fully moved on the second scroll (p = 0.30)
   let opacity = 0;
-  if (progression > 0.1) {
-    opacity = Math.min((progression - 0.1) / 0.1, 1.0);
+  if (progression > 0.30) {
+    opacity = Math.min((progression - 0.30) / 0.1, 1.0);
   }
 
   // Fade out at the very end when the card appears? Or keep it? The user said "appear on the left", usually it can stay.
@@ -31,17 +31,19 @@ export function BrandOverlay() {
       style={{
         position: 'absolute',
         left: isMobile ? '1.5rem' : '2.5rem',
-        top: isMobile ? '1.5rem' : '2.5rem',
+        top: isMobile ? '18px' : '2.5rem',
         color: '#ffffff',
         fontFamily: '"Playfair Display", serif',
         fontSize: isMobile ? '0.85rem' : '1.1rem',
         letterSpacing: '0.2em',
         opacity: opacity,
         transition: 'opacity 0.1s linear',
-        pointerEvents: 'none',
+        pointerEvents: 'auto',
+        cursor: 'pointer',
         zIndex: 20,
         whiteSpace: 'nowrap',
       }}
+      onClick={() => window.location.href = '/'}
     >
       PARADISE ORGANICS
     </div>

@@ -6,12 +6,7 @@ export function Distributors() {
   return (
     <div className="premium-page-container">
       <Link to="/" className="paradise-logo logo-link">
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {'PARADISE'.split('').map((char, index) => <span key={index}>{char}</span>)}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {'ORGANICS'.split('').map((char, index) => <span key={index}>{char}</span>)}
-        </div>
+        PARADISE ORGANICS
       </Link>
       
       <div className="premium-content-wrapper">

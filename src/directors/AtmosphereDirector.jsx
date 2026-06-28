@@ -198,7 +198,8 @@ export function AtmosphereDirector() {
           ref={textRef}
           position={[0, isMobile ? 50 : 35, -200]} 
           fontSize={isMobile ? 25 : 45} 
-          letterSpacing={0.2}
+          letterSpacing={isMobile ? 0.05 : 0.2}
+          lineHeight={isMobile ? 0.85 : 1}
           material={textMaterial}
           outlineWidth="0.8%"
           outlineColor="#D4AF37"
@@ -208,9 +209,9 @@ export function AtmosphereDirector() {
         </DreiText>
 
         <Clouds material={THREE.MeshBasicMaterial}>
-          <Cloud segments={40} bounds={[20, 5, 5]} volume={20} color="#ffffff" position={[0, 30, -50]} />
-          <Cloud segments={40} bounds={[20, 5, 5]} volume={20} color="#ffffff" position={[40, 25, -60]} />
-          <Cloud segments={40} bounds={[20, 5, 5]} volume={20} color="#ffffff" position={[-40, 35, -45]} />
+          <Cloud segments={40} bounds={[30, 2, 30]} volume={15} color="#ffffff" position={[0, isMobile ? 70 : 30, -50]} />
+          <Cloud segments={40} bounds={[20, 5, 5]} volume={20} color="#ffffff" position={[40, isMobile ? 65 : 25, -60]} />
+          <Cloud segments={40} bounds={[20, 5, 5]} volume={20} color="#ffffff" position={[-40, isMobile ? 75 : 35, -45]} />
         </Clouds>
 
         <Bird position={[10, 20, -30]} speed={1.2} offset={0} />

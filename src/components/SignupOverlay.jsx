@@ -123,6 +123,11 @@ export function SignupOverlay() {
                 Access the Paradise Network
               </button>
             </form>
+
+            <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
+              Or contact us directly:<br/>
+              <a href="mailto:sales@paradiseorganics.co" style={{ color: '#F5C036', textDecoration: 'none', fontWeight: '500', display: 'inline-block', marginTop: '6px' }}>sales@paradiseorganics.co</a>
+            </div>
           </>
         )}
       </div>
