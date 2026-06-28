@@ -4,6 +4,7 @@ import { ExperienceDirector } from './directors/ExperienceDirector';
 import { SoundDirector } from './directors/SoundDirector';
 import { useExperienceStore } from './store/useExperienceStore';
 import { SignupOverlay } from './components/SignupOverlay';
+import { BrandOverlay } from './components/BrandOverlay';
 import { BottomNav } from './components/BottomNav';
 import { OurStory } from './pages/OurStory';
 import { Products } from './pages/Products';
@@ -104,6 +105,7 @@ function App() {
       <Routes>
         <Route path="/" element={
           <div className="app-root">
+            <BrandOverlay />
             <StoryOverlay />
             <SignupOverlay />
             <SoundDirector />
