@@ -9,7 +9,7 @@ import {
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { useExperienceStore } from '../store/useExperienceStore';
-import { Sky, Clouds, Cloud } from '@react-three/drei';
+import { Sky, Clouds, Cloud, Text as DreiText } from '@react-three/drei';
 import { createDustTexture } from '../utils/TextureGenerator';
 
 function Bird({ position, speed = 1, offset = 0 }) {
@@ -51,41 +51,42 @@ function SpeedDust() {
     const pos = new Float32Array(count * 3);
     const spd = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 20; // x
-      pos[i * 3 + 1] = Math.random() * 50 - 25; // y
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 20; // z
-      spd[i] = 1.0 + Math.random() * 3.0;
+      pos[i * 3] = (Math.random() - 0.5) * 50;
+      pos[i * 3 + 1] = Math.random() * 50; // Only positive Y
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 50;
+      spd[i] = 0.2 + Math.random() * 0.8;
     }
     return [pos, spd];
-  }, [count]);
+  }, []);
 
   useFrame((state, delta) => {
     if (!particlesRef.current) return;
     const p = useExperienceStore.getState().progression;
-    
-    // Only show when diving
-    const isDiving = p > 1.0 && p < 1.6;
-    particlesRef.current.visible = isDiving;
-    
-    if (isDiving) {
-      const positions = particlesRef.current.geometry.attributes.position.array;
-      const diveIntensity = Math.min((p - 1.0) * 2.0, 1.0); // Ramps up speed
-      
-      for (let i = 0; i < count; i++) {
-        // Move particles upwards based on speed and dive intensity
-        positions[i * 3 + 1] += speeds[i] * delta * 20 * diveIntensity;
-        
-        // Loop particles back to bottom
-        if (positions[i * 3 + 1] > 25) {
-          positions[i * 3 + 1] = -25;
-        }
+    // Speed increases dramatically when diving
+    let speedMultiplier = 1;
+    if (p > 1.0 && p < 1.6) speedMultiplier = 15;
+    else if (p > 1.6) speedMultiplier = 5;
+
+    const positionsArray = particlesRef.current.geometry.attributes.position.array;
+    for (let i = 0; i < count; i++) {
+      positionsArray[i * 3 + 1] += speeds[i] * speedMultiplier * delta * 15;
+      if (positionsArray[i * 3 + 1] > 50) {
+        positionsArray[i * 3 + 1] = -10; // reset to bottom
       }
-      particlesRef.current.geometry.attributes.position.needsUpdate = true;
     }
+    particlesRef.current.geometry.attributes.position.needsUpdate = true;
+    
+    let targetOpacity = 0;
+    if (p > 1.0) targetOpacity = 1;
+    particlesRef.current.material.opacity = THREE.MathUtils.lerp(
+      particlesRef.current.material.opacity,
+      targetOpacity,
+      delta * 2
+    );
   });
 
   return (
-    <points ref={particlesRef} visible={false}>
+    <points ref={particlesRef}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
@@ -95,21 +96,21 @@ function SpeedDust() {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.08}
-        map={dotTexture}
-        color="#F5C036"
+        size={0.15}
+        color="#ffcc66" // Golden embers
         transparent
-        opacity={0.8}
-        depthWrite={false}
+        opacity={0}
         blending={THREE.AdditiveBlending}
+        depthWrite={false}
+        map={dotTexture}
       />
     </points>
   );
 }
 
 export function AtmosphereDirector() {
-  const debugLighting = useExperienceStore((state) => state.debugLighting);
   const { scene } = useThree();
+  const debugLighting = useExperienceStore((state) => state.debugLighting);
   const noiseRef = useRef();
   
   // Set default daytime background
@@ -117,11 +118,15 @@ export function AtmosphereDirector() {
     scene.background = new THREE.Color('#cceeff');
   }, [scene]);
 
+  // Setup fog
   useEffect(() => {
     scene.fog = new THREE.Fog(new THREE.Color("#cceeff"), 20, 250);
   }, [scene]);
 
   const skyGroupRef = useRef();
+  const textRef = useRef();
+
+  const isMobile = window.innerWidth < 768;
 
   useFrame((state, delta) => {
     if (!scene.fog) return;
@@ -130,6 +135,12 @@ export function AtmosphereDirector() {
     
     if (skyGroupRef.current) {
       skyGroupRef.current.visible = p < 1.0;
+    }
+    
+    if (textRef.current) {
+      const baseY = isMobile ? 50 : 35;
+      // Move upwards in the sky as you scroll
+      textRef.current.position.y = baseY + p * 150;
     }
     
     // Daytime Fog Colors
@@ -174,12 +185,27 @@ export function AtmosphereDirector() {
     }
     scene.fog.far = THREE.MathUtils.lerp(scene.fog.far, targetFar, delta * 1.5);
   });
+  // #1E3A5F is a deep, grounded navy blue. In color psychology, deep blue is universally 
+  // recognized as the color of trust, authenticity, and unwavering stability. 
+  const textMaterial = useMemo(() => new THREE.MeshBasicMaterial({ color: '#1E3A5F', fog: false, toneMapped: false }), []);
 
   return (
     <>
       <group ref={skyGroupRef}>
         <Sky sunPosition={[0, 100, 0]} inclination={0} azimuth={0.25} rayleigh={0.5} turbidity={5} />
         
+        <DreiText 
+          ref={textRef}
+          position={[0, isMobile ? 50 : 35, -200]} 
+          fontSize={isMobile ? 25 : 45} 
+          letterSpacing={0.2}
+          material={textMaterial}
+          outlineWidth="0.8%"
+          outlineColor="#D4AF37"
+        >
+          ORIGIN MATTERS.
+        </DreiText>
+
         <Clouds material={THREE.MeshBasicMaterial}>
           <Cloud segments={40} bounds={[20, 5, 5]} volume={20} color="#ffffff" position={[0, 30, -50]} />
           <Cloud segments={40} bounds={[20, 5, 5]} volume={20} color="#ffffff" position={[40, 25, -60]} />

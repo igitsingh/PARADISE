@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { ExperienceDirector } from './directors/ExperienceDirector';
+import { SoundDirector } from './directors/SoundDirector';
 import { useExperienceStore } from './store/useExperienceStore';
 import { SignupOverlay } from './components/SignupOverlay';
+import { BottomNav } from './components/BottomNav';
+import { OurStory } from './pages/OurStory';
+import { Products } from './pages/Products';
+import { ImpactReport } from './pages/ImpactReport';
+import { Distributors } from './pages/Distributors';
 import './index.css';
 import './App.css';
 
@@ -93,23 +100,23 @@ function StoryOverlay() {
 
 function App() {
   return (
-    <div className="app-root">
-      <div className="paradise-logo">
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {'PARADISE'.split('').map((char, index) => (
-            <span key={index}>{char}</span>
-          ))}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {'ORGANICS'.split('').map((char, index) => (
-            <span key={index}>{char}</span>
-          ))}
-        </div>
-      </div>
-      <StoryOverlay />
-      <SignupOverlay />
-      <ExperienceDirector />
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={
+          <div className="app-root">
+            <StoryOverlay />
+            <SignupOverlay />
+            <SoundDirector />
+            <ExperienceDirector />
+          </div>
+        } />
+        <Route path="/our-story" element={<OurStory />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/impact-report" element={<ImpactReport />} />
+        <Route path="/distributors" element={<Distributors />} />
+      </Routes>
+      <BottomNav />
+    </>
   );
 }
 

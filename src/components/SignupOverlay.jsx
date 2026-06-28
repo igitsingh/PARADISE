@@ -118,21 +118,7 @@ export function SignupOverlay() {
               />
               <button 
                 type="submit"
-                style={{
-                  width: '100%',
-                  padding: '18px',
-                  background: 'linear-gradient(135deg, #F5C036 0%, #D49A1F 100%)',
-                  border: 'none',
-                  borderRadius: '12px',
-                  color: '#0A0802',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  letterSpacing: '1px',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 15px rgba(245, 192, 54, 0.3)',
-                  transition: 'transform 0.1s, box-shadow 0.1s'
-                }}
+                className="signup-submit-btn"
               >
                 Access the Paradise Network
               </button>
