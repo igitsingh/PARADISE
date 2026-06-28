@@ -4,9 +4,11 @@ import { WorldDirector } from './WorldDirector';
 import { CameraDirector } from './CameraDirector';
 import { ContinuityDirector } from './ContinuityDirector';
 import { LightingDirector } from './LightingDirector';
+import { GeologyDirector } from './GeologyDirector';
 import { InteractionDirector } from './InteractionDirector';
 import { AtmosphereDirector } from './AtmosphereDirector';
 import { WeatherDirector } from './WeatherDirector';
+import { UndergroundDirector } from './UndergroundDirector';
 import { useExperienceStore } from '../store/useExperienceStore';
 
 export function ExperienceDirector() {
@@ -36,6 +38,10 @@ export function ExperienceDirector() {
           <InteractionDirector />
           <AtmosphereDirector />
           <WeatherDirector />
+          <UndergroundDirector />
+          <Suspense fallback={null}>
+            <GeologyDirector />
+          </Suspense>
         </Suspense>
       </Canvas>
       
@@ -60,7 +66,7 @@ function DebugOverlay() {
       <div>Paradise Experience Engine v0.0.3</div>
       <div>Progression: {(progression * 100).toFixed(1)}%</div>
       <div>Debug Lighting (L): {debugLighting ? 'ON' : 'OFF'}</div>
-      <div>Weather State: {progression < 0.2 ? 'Calm' : progression < 0.6 ? 'Rain' : 'Golden Wind'}</div>
+      <div>Weather State: {progression < 0.2 ? 'Calm' : progression < 0.6 ? 'Rain' : progression < 1.0 ? 'Cool Night' : 'Underground Soil'}</div>
     </div>
   );
 }

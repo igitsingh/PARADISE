@@ -16,7 +16,7 @@ export const useExperienceStore = create((set) => ({
       console.warn('Engine Warning: Invalid progression value (NaN or Infinite). Value ignored.');
       return;
     }
-    const clamped = Math.max(0, Math.min(1, target));
+    const clamped = Math.max(0, Math.min(2.5, target));
     set({ targetProgression: clamped });
   },
 

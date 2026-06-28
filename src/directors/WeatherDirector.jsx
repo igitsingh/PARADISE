@@ -9,12 +9,12 @@ export function WeatherDirector() {
   const dustPointsRef = useRef();
   
   // Rain particles (Vertical streaks)
-  const rainCount = 8000;
+  const rainCount = 50000;
   const rainPositions = useMemo(() => {
     const pos = new Float32Array(rainCount * 3);
     for (let i = 0; i < rainCount; i++) {
       pos[i * 3] = (Math.random() - 0.5) * 100;     // x spread
-      pos[i * 3 + 1] = Math.random() * 80;          // y height
+      pos[i * 3 + 1] = (Math.random() * 100) - 5;   // perfectly distributed y height from -5 to 95
       pos[i * 3 + 2] = (Math.random() - 0.5) * 100; // z spread
     }
     return pos;
@@ -46,10 +46,12 @@ export function WeatherDirector() {
     if (rainPointsRef.current) {
       const positions = rainPointsRef.current.geometry.attributes.position.array;
       for (let i = 0; i < rainCount; i++) {
-        positions[i * 3 + 1] -= delta * 40; // Fall speed
-        positions[i * 3] -= delta * 5;      // Wind slant
+        positions[i * 3 + 1] -= delta * 120; // Heavy storm fall speed
+        positions[i * 3] -= delta * 15;      // Heavy wind slant
         if (positions[i * 3 + 1] < -5) {
-          positions[i * 3 + 1] = 80; // Reset to top
+          // Perfectly wrap around the vertical space to maintain the exact initial random distribution forever
+          positions[i * 3 + 1] += 100; 
+          // We can also re-randomize X/Z slightly without breaking the vertical distribution
           positions[i * 3] = (Math.random() - 0.5) * 100;
         }
       }
@@ -73,17 +75,26 @@ export function WeatherDirector() {
       );
     }
 
-    // Animate Wind/Debris (Fierce horizontal blowing)
+    // Animate Wind/Debris (Fierce horizontal blowing across the screen)
     if (dustPointsRef.current) {
       const positions = dustPointsRef.current.geometry.attributes.position.array;
-      const time = state.clock.getElapsedTime();
+      
+      // Calculate the perfect left-to-right vector for the camera's wind state angle (Math.PI * 0.35)
+      const windAngle = Math.PI * 0.35;
+      const dirX = Math.cos(windAngle);
+      const dirZ = -Math.sin(windAngle);
+
       for (let i = 0; i < dustCount; i++) {
-        // Fierce horizontal gale, completely horizontal
-        positions[i * 3] += delta * (80 + Math.random() * 40); // Move very fast to the right
+        const speed = delta * (80 + Math.random() * 40);
+        positions[i * 3] += dirX * speed;
+        positions[i * 3 + 2] += dirZ * speed;
         
-        if (positions[i * 3] > 60) {
-          positions[i * 3] = -60; // wrap around further out
-        }
+        // Wrap around 160x160 area
+        if (positions[i * 3] > 80) positions[i * 3] -= 160;
+        else if (positions[i * 3] < -80) positions[i * 3] += 160;
+        
+        if (positions[i * 3 + 2] > 80) positions[i * 3 + 2] -= 160;
+        else if (positions[i * 3 + 2] < -80) positions[i * 3 + 2] += 160;
       }
       dustPointsRef.current.geometry.attributes.position.needsUpdate = true;
       
@@ -113,7 +124,7 @@ export function WeatherDirector() {
           <bufferAttribute attach="attributes-position" count={rainCount} array={rainPositions} itemSize={3} />
         </bufferGeometry>
         <pointsMaterial 
-          size={0.6} 
+          size={2.0} 
           map={rainMap}
           color="#aaccff" 
           transparent 

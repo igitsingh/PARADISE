@@ -1,0 +1,8 @@
+Model Information:
+* title:	Layers Of The Earth
+* source:	https://sketchfab.com/3d-models/layers-of-the-earth-58d7bf570deb4afda75aa0d50ad93e63
+* author:	arloopa (https://sketchfab.com/arloopa)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
