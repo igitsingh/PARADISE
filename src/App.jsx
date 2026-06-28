@@ -3,6 +3,7 @@ import { ExperienceDirector } from './directors/ExperienceDirector';
 import { useExperienceStore } from './store/useExperienceStore';
 import { SignupOverlay } from './components/SignupOverlay';
 import './index.css';
+import './App.css';
 
 function calcOpacity(p, start, end, fade = 0.05) {
   if (p < start || p > end) return 0;
