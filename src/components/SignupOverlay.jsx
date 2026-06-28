@@ -43,19 +43,7 @@ export function SignupOverlay() {
       opacity: opacity,
       transition: 'opacity 0.2s ease-out'
     }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '600px',
-        padding: '50px 40px',
-        background: 'rgba(10, 8, 2, 0.45)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(245, 192, 54, 0.2)',
-        borderRadius: '24px',
-        boxShadow: '0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-        color: '#fff',
-        fontFamily: '"Inter", sans-serif',
-        textAlign: 'center',
+      <div className="signup-card" style={{
         transform: `translateY(${(1 - opacity) * 30}px)`,
         transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)'
       }}>
@@ -84,14 +72,7 @@ export function SignupOverlay() {
               Unlock wholesale pricing, exclusive harvest access, and partner directly with the source of true Lakadong purity.
             </p>
             
-            <div style={{ 
-              display: 'flex', 
-              background: 'rgba(0,0,0,0.4)', 
-              borderRadius: '12px', 
-              padding: '4px',
-              marginBottom: '32px',
-              border: '1px solid rgba(255,255,255,0.05)'
-            }}>
+            <div className="role-buttons-container">
               {roles.map((r) => (
                 <button
                   key={r}

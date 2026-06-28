@@ -11,6 +11,28 @@ import { WeatherDirector } from './WeatherDirector';
 import { UndergroundDirector } from './UndergroundDirector';
 import { useExperienceStore } from '../store/useExperienceStore';
 
+import React, { Component } from 'react';
+import { Loader } from '@react-three/drei';
+
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('Canvas Error:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return <div style={{ color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#000' }}>Failed to load 3D assets. Please reload the page.</div>;
+    }
+    return this.props.children;
+  }
+}
+
 export function ExperienceDirector() {
   const showDebug = useExperienceStore((state) => state.showDebug);
   
@@ -30,20 +52,28 @@ export function ExperienceDirector() {
 
   return (
     <>
-      <Canvas shadows dpr={[1, 2]} gl={{ antialias: false, powerPreference: "high-performance" }}>
-        <Suspense fallback={null}>
-          <WorldDirector />
-          <CameraDirector />
-          <LightingDirector />
-          <InteractionDirector />
-          <AtmosphereDirector />
-          <WeatherDirector />
-          <UndergroundDirector />
+      <ErrorBoundary>
+        <Canvas shadows dpr={Math.min(window.devicePixelRatio, 1.5)} gl={{ antialias: false, powerPreference: "high-performance" }}>
           <Suspense fallback={null}>
-            <GeologyDirector />
+            <WorldDirector />
+            <CameraDirector />
+            <LightingDirector />
+            <InteractionDirector />
+            <AtmosphereDirector />
+            <WeatherDirector />
+            <UndergroundDirector />
+            <Suspense fallback={null}>
+              <GeologyDirector />
+            </Suspense>
           </Suspense>
-        </Suspense>
-      </Canvas>
+        </Canvas>
+      </ErrorBoundary>
+      <Loader 
+        containerStyles={{ background: '#0a0802' }} 
+        innerStyles={{ width: '300px' }} 
+        barStyles={{ background: '#F5C036' }} 
+        dataStyles={{ color: '#F5C036', fontFamily: 'Cinzel' }} 
+      />
       
       {/* Developer Debug Overlay */}
       {showDebug && <DebugOverlay />}

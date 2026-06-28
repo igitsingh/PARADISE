@@ -40,8 +40,10 @@ export function CameraDirector() {
     // 1.00 - 1.30: Dive into the Soil
     
     let targetTheta = 0;
-    let targetRadius = 12; // Moved closer
-    let targetHeight = 2;  // Lowered height
+    // Determine if on a mobile screen to pull camera back
+    const isMobile = window.innerWidth <= 768;
+    let targetRadius = isMobile ? 18 : 12; // Moved further back on mobile
+    let targetHeight = isMobile ? 3 : 2;  // Lowered height (slightly higher on mobile)
     
     if (p < 0.15) {
       targetTheta = 0;

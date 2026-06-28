@@ -36,7 +36,7 @@ function StoryOverlay() {
       )
     },
     {
-      start: 0.25, end: 0.45,
+      start: 0.1, end: 0.45,
       content: (
         <>
           Nourished by the <strong style={{fontWeight: 800, color: '#aaccff'}}>PURE RAINS</strong> of Meghalaya.<br />Nature's cleansing blessing.
@@ -70,39 +70,17 @@ function StoryOverlay() {
   ];
 
   return (
-    <div style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      zIndex: 100,
-      pointerEvents: 'none',
-      overflow: 'hidden'
-    }}>
-      {storyBlocks.map((block, i) => {
-        const opacity = calcOpacity(progression, block.start, block.end);
+    <div className="story-overlay-container">
+      {storyBlocks.map((block, index) => {
+        const opacity = Math.max(0, Math.min(1, calcOpacity(progression, block.start, block.end)));
         if (opacity <= 0.01) return null;
-        
-        const isRight = i % 2 === 0; // 0, 2, 4 = right. 1, 3 = left.
-        
+
+        const isRight = index % 2 === 0;
+
         return (
-          <div key={i} style={{ 
-            position: 'absolute',
-            bottom: '60px',
-            right: isRight ? '60px' : undefined,
-            left: !isRight ? '60px' : undefined,
-            width: '450px',
-            color: '#ffffff',
-            fontFamily: '"Inter", sans-serif',
-            fontSize: '28px',
-            fontWeight: '300',
-            lineHeight: '1.4',
-            textAlign: 'left',
-            textShadow: '0px 4px 20px rgba(0,0,0,0.6)',
+          <div key={index} className={`story-block ${isRight ? 'align-right' : 'align-left'}`} style={{
             opacity: opacity,
-            transform: `translateY(${(1 - opacity) * 10}px)`,
-            transition: 'opacity 0.1s linear, transform 0.1s linear'
+            transform: `translateY(${(1 - opacity) * 10}px)`
           }}>
             {block.content}
           </div>
@@ -115,22 +93,7 @@ function StoryOverlay() {
 function App() {
   return (
     <div className="app-root">
-      <div style={{
-        position: 'absolute',
-        top: '40px',
-        left: '40px',
-        zIndex: 100,
-        color: '#ffffff',
-        fontFamily: '"Cinzel", serif',
-        fontSize: '32px',
-        fontWeight: '700',
-        pointerEvents: 'none',
-        lineHeight: '1.1',
-        textTransform: 'uppercase',
-        display: 'flex',
-        flexDirection: 'column',
-        width: '260px'
-      }}>
+      <div className="paradise-logo">
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           {'PARADISE'.split('').map((char, index) => (
             <span key={index}>{char}</span>
