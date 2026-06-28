@@ -202,8 +202,9 @@ export function AtmosphereDirector() {
           material={textMaterial}
           outlineWidth="0.8%"
           outlineColor="#D4AF37"
+          textAlign="center"
         >
-          ORIGIN MATTERS.
+          {isMobile ? "ORIGIN\nMATTERS." : "ORIGIN MATTERS."}
         </DreiText>
 
         <Clouds material={THREE.MeshBasicMaterial}>
